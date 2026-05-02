@@ -10,13 +10,16 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const manifest = params.get('manifest');
-    if (manifest) {
-      const itms = 'itms-services://?action=download-manifest&url=' + manifest;
-      window.location.replace(itms);
-      setTimeout(() => { window.location.href = itms; }, 400);
-      document.body.innerHTML = '<p>If install did not start, <a href="' + itms + '">tap here</a>.</p>';
-    } else {
+    if (!manifest) {
       document.body.innerHTML = '<p>Missing manifest URL.</p>';
+    } else {
+      const itms = 'itms-services://?action=download-manifest&url=' + manifest;
+      const key = 'ota_redirected_' + manifest;
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        window.location.replace(itms);
+      }
+      document.body.innerHTML = '<p>If install did not start, <a href="' + itms + '">tap here</a>.</p>';
     }
   </script>
 </body>
