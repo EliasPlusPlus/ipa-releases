@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -6,33 +5,48 @@
   <title>Install Anti-Revoke Profile</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f2f2f7; color: #1c1c1e; margin: 0; padding: 40px 16px; text-align: center; }
-    .card { max-width: 520px; margin: 0 auto; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .card { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
     h1 { margin: 0 0 12px; font-size: 24px; }
     p { margin: 0 0 14px; color: #3a3a3c; line-height: 1.5; }
-    a.btn { display: inline-block; margin-top: 8px; padding: 12px 18px; border-radius: 12px; background: #007aff; color: #fff; text-decoration: none; font-weight: 600; }
-    .small { font-size: 14px; color: #6e6e73; margin-top: 14px; }
+    a.btn { display: inline-block; margin: 6px; padding: 12px 18px; border-radius: 12px; background: #007aff; color: #fff; text-decoration: none; font-weight: 600; }
+    .muted { color: #6e6e73; font-size: 14px; }
+    .warn { color: #b42318; font-weight: 600; }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Install Anti-Revoke</h1>
-    <p>Tap the button below to start profile installation.</p>
-    <div id="actions"></div>
-    <p class="small">If Telegram opens a download page, tap the link in Safari instead.</p>
+    <div id="content"></div>
   </div>
   <script>
     const params = new URLSearchParams(window.location.search);
     const profile = params.get('profile');
-    const actions = document.getElementById('actions');
+    const content = document.getElementById('content');
+
+    const ua = navigator.userAgent || '';
+    const isTelegram = /Telegram/i.test(ua);
+    const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser|DuckDuckGo|Instagram|FBAN|FBAV|Line|GSA/i.test(ua);
+
     if (!profile) {
-      actions.innerHTML = '<p>Missing profile URL.</p>';
+      content.innerHTML = '<p class="warn">Missing profile URL.</p>';
+    } else if (!isSafari || isTelegram) {
+      const safariScheme = 'x-safari-' + window.location.href;
+      content.innerHTML = '
+        <p class="warn">For reliability, installation is only allowed from Safari.</p>
+        <p>Tap <b>Open in Safari</b> below, then continue installation there.</p>
+        <p>
+          <a class="btn" href="' + safariScheme + '">Open in Safari</a>
+        </p>
+        <p class="muted">If Safari does not open automatically, copy this page URL and open it directly in Safari.</p>
+      ';
     } else {
+      content.innerHTML = '<p>Starting profile installation from Safari…</p><p class="muted">If nothing happens, tap the button below.</p>';
       const btn = document.createElement('a');
       btn.className = 'btn';
       btn.href = profile;
       btn.textContent = 'Install Profile';
-      actions.appendChild(btn);
-      setTimeout(() => { window.location.href = profile; }, 600);
+      content.appendChild(btn);
+      setTimeout(() => { window.location.href = profile; }, 500);
     }
   </script>
 </body>
