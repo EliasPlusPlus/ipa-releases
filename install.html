@@ -3,23 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Installing...</title>
+  <title>Installer</title>
 </head>
 <body>
-  <p>Starting installation...</p>
+  <p>Starting installer...</p>
   <script>
     const params = new URLSearchParams(window.location.search);
     const manifest = params.get('manifest');
-    if (!manifest) {
-      document.body.innerHTML = '<p>Missing manifest URL.</p>';
-    } else {
+    const profile = params.get('profile');
+
+    if (profile) {
+      // Profile install path
+      const key = 'profile_redirected_' + profile;
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        window.location.replace(profile);
+      }
+      document.body.innerHTML = '<p>If profile install did not start, <a href="' + profile + '">tap here</a>. If you are in Telegram, open this page in Safari first.</p>';
+    } else if (manifest) {
+      // IPA OTA install path
       const itms = 'itms-services://?action=download-manifest&url=' + manifest;
       const key = 'ota_redirected_' + manifest;
       if (!sessionStorage.getItem(key)) {
         sessionStorage.setItem(key, '1');
         window.location.replace(itms);
       }
-      document.body.innerHTML = '<p>If install did not start, <a href="' + itms + '">tap here</a>.</p>';
+      document.body.innerHTML = '<p>If app install did not start, <a href="' + itms + '">tap here</a>.</p>';
+    } else {
+      document.body.innerHTML = '<p>Missing install target.</p>';
     }
   </script>
 </body>
