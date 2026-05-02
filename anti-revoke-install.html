@@ -32,21 +32,14 @@
     } else if (!isSafari || isTelegram) {
       const safariScheme = 'x-safari-' + window.location.href;
       content.innerHTML = '
-        <p class="warn">For reliability, installation is only allowed from Safari.</p>
-        <p>Tap <b>Open in Safari</b> below, then continue installation there.</p>
-        <p>
-          <a class="btn" href="' + safariScheme + '">Open in Safari</a>
-        </p>
-        <p class="muted">If Safari does not open automatically, copy this page URL and open it directly in Safari.</p>
+        <p class="warn">Open this page in Safari to continue.</p>
+        <p>Tap <b>Open in Safari</b> below, then the profile will start automatically.</p>
+        <p><a class="btn" href="' + safariScheme + '">Open in Safari</a></p>
+        <p class="muted">If Safari does not open, copy this page URL and paste it in Safari.</p>
       ';
     } else {
-      content.innerHTML = '<p>Starting profile installation from Safari…</p><p class="muted">If nothing happens, tap the button below.</p>';
-      const btn = document.createElement('a');
-      btn.className = 'btn';
-      btn.href = profile;
-      btn.textContent = 'Install Profile';
-      content.appendChild(btn);
-      setTimeout(() => { window.location.href = profile; }, 500);
+      content.innerHTML = '<p>Safari detected. Starting profile install…</p><p class="muted">If needed, reload this page in Safari.</p>';
+      setTimeout(() => { window.location.href = profile; }, 350);
     }
   </script>
 </body>
