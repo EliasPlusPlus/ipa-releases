@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installing...</title>
+</head>
+<body>
+  <p>Starting installation...</p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const manifest = params.get('manifest');
+    if (manifest) {
+      const itms = 'itms-services://?action=download-manifest&url=' + manifest;
+      window.location.replace(itms);
+      setTimeout(() => { window.location.href = itms; }, 400);
+      document.body.innerHTML = '<p>If install did not start, <a href="' + itms + '">tap here</a>.</p>';
+    } else {
+      document.body.innerHTML = '<p>Missing manifest URL.</p>';
+    }
+  </script>
+</body>
+</html>
